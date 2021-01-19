@@ -8,3 +8,7 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+window.onbeforeunload = function () {
+  return "Reload will lose all the changes";
+};
