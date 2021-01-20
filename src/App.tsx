@@ -1,47 +1,50 @@
 import { StyleSheet, css } from "aphrodite";
-import Home from "./Home";
-import Stats from "./Stats";
-import Battle from "./Battle";
-import Paths from "./Paths";
+import Home from "./scenes/Home";
+import Stats from "./scenes/Stats";
+import Battle from "./scenes/Battle";
+import Paths from "./scenes/Paths";
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 
 function App() {
   return (
-    <Router>
-      <div className={css(styles.app)}>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/stats">Stats</Link>
-            </li>
-            <li>
-              <Link to="/battle">Battle</Link>
-            </li>
-            <li>
-              <Link to="/paths">Paths</Link>
-            </li>
-          </ul>
-        </nav>
-        <Switch>
-          <Route path="/stats">
-            <Stats />
-          </Route>
-          <Route path="/battle">
-            <Battle />
-          </Route>
-          <Route path="/paths">
-            <Paths />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+    <RecoilRoot>
+      <Router>
+        <div className={css(styles.app)}>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/stats">Stats</Link>
+              </li>
+              <li>
+                <Link to="/battle">Battle</Link>
+              </li>
+              <li>
+                <Link to="/paths">Paths</Link>
+              </li>
+            </ul>
+          </nav>
+          <Switch>
+            <Route path="/stats">
+              <Stats />
+            </Route>
+            <Route path="/battle">
+              <Battle />
+            </Route>
+            <Route path="/paths">
+              <Paths />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
+    </RecoilRoot>
   );
 }
 
