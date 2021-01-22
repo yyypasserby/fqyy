@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
-export const gameState = atom({
-  key: "gameState",
+export const gameAtom = atom({
+  key: "gameAtom",
   default: {
     id: 1,
     name: "new game",
