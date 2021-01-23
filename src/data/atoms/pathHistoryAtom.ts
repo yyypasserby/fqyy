@@ -1,6 +1,7 @@
+import { List } from "immutable";
 import { atom } from "recoil";
 
 export const pathHistoryAtom = atom({
   key: "pathHistoryAtom",
-  default: [0],
+  default: List<number>([0]),
 });

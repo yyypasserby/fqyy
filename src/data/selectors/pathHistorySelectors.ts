@@ -5,8 +5,8 @@ export const pathHistorySelector = selector({
   key: "pathHistorySelector",
   get: ({ get }) => {
     const pathHistory = get(pathHistoryAtom);
-    const pathLength = pathHistory.length;
-    const lastPath = pathHistory[pathLength - 1];
+    const pathLength = pathHistory.size;
+    const lastPath = pathHistory.get(pathLength - 1);
     return {
       pathLength,
       lastPath,

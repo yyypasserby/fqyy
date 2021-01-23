@@ -9,7 +9,7 @@ function Paths() {
   const { pathLength, lastPath } = useRecoilValue(pathHistorySelector);
   const selectAPath = React.useCallback(
     (item) => {
-      setPathHistory([...pathHistory, item]);
+      setPathHistory(pathHistory.push(item));
     },
     [pathHistory, setPathHistory]
   );
