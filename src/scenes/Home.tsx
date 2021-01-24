@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { charaterAtom } from "../data/atoms/characterAtom";
 import { gameAtom, GameRecord } from "../data/atoms/gameAtom";
