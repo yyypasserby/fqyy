@@ -1,20 +1,23 @@
-import { Map, Record, RecordOf } from "immutable";
+import { List, Record, RecordOf } from "immutable";
+import { BattleMap } from "../utils/BattleMap";
 import { UnitRecordType } from "./UnitRecord";
 
-const WeatherTypes = ["sunny", "rainy", "windy", "snowy"] as const;
+export const WeatherTypes = ["sunny", "rainy", "windy", "snowy"] as const;
 
 export type WeatherType = typeof WeatherTypes[number];
 
 export type BattleType = {
   weather: WeatherType;
-  ourUnits: Map<string, UnitRecordType>;
-  enemyUnits: Map<string, UnitRecordType>;
+  map: BattleMap;
+  ourUnits: List<UnitRecordType>;
+  enemyUnits: List<UnitRecordType>;
 };
 
 export type BattleRecordType = RecordOf<BattleType>;
 
 export const BattleRecord = Record<BattleType>({
   weather: "sunny",
-  ourUnits: Map<string, UnitRecordType>(),
-  enemyUnits: Map<string, UnitRecordType>(),
+  map: BattleMap.random(100, 100),
+  ourUnits: List<UnitRecordType>(),
+  enemyUnits: List<UnitRecordType>(),
 });

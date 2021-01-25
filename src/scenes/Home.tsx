@@ -1,29 +1,16 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { useRecoilState, useResetRecoilState } from "recoil";
-import { CharaterListAtom } from "../data/atoms/CharacterListAtom";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { GameAtom } from "../data/atoms/GameAtom";
-import { PathHistoryListAtom } from "../data/atoms/PathHistoryListAtom";
-import { GameRecord } from "../data/records/GameRecord";
 
 function Home() {
-  const [game, setGame] = useRecoilState(GameAtom);
-  const resetCharacters = useResetRecoilState(CharaterListAtom);
-  const resetPathHistory = useResetRecoilState(PathHistoryListAtom);
+  const game = useRecoilValue(GameAtom);
   const routerHistory = useHistory();
-
+  const resetGame = useResetRecoilState(GameAtom);
   const startNewGame = React.useCallback(() => {
-    const newID = game.id + 1;
-    setGame(
-      GameRecord({
-        id: newID,
-        name: "new game" + newID,
-      })
-    );
-    resetCharacters();
-    resetPathHistory();
+    resetGame();
     routerHistory.push("/paths");
-  }, [game.id, resetCharacters, resetPathHistory, routerHistory, setGame]);
+  }, [resetGame, routerHistory]);
 
   return (
     <div>

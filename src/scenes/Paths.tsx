@@ -1,29 +1,39 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { PathHistoryListAtom } from "../data/atoms/PathHistoryListAtom";
-import { PathHistoryInfoSelector } from "../data/selectors/PathHistoryInfoSelector";
+import { useHistory } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { BattleAtom } from "../data/atoms/BattleAtom";
+import { LastPathWriteableSelector } from "../data/selectors/LastPathWriteableSelector";
+import { PathHistoryListSelector } from "../data/selectors/PathHistoryListSelector";
 
 const CHOICES = [1, 2, 3];
+
 function Paths() {
-  const [pathHistory, setPathHistory] = useRecoilState(PathHistoryListAtom);
-  const { pathLength, lastPath } = useRecoilValue(PathHistoryInfoSelector);
+  const routerHistory = useHistory();
+  const pathHistoryList = useRecoilValue(PathHistoryListSelector);
+  const [lastPath, addPath] = useRecoilState(LastPathWriteableSelector);
+  const resetBattle = useResetRecoilState(BattleAtom);
   const selectAPath = React.useCallback(
-    (item) => {
-      setPathHistory(pathHistory.push(item));
+    (item: number) => {
+      addPath(item);
+      resetBattle();
+
+      routerHistory.push("/battle");
     },
-    [pathHistory, setPathHistory]
+    [addPath, resetBattle, routerHistory]
   );
 
   return (
     <div>
       <h1>Paths</h1>
-      <h2>Path History: [{pathHistory.join(",")}]</h2>
-      <h2>You are at: {pathLength} level</h2>
+      <h2>Path History: [{pathHistoryList.join(",")}]</h2>
+      <h2>You are at Level {pathHistoryList.size}</h2>
       <h2>You choose option {lastPath} as your last path</h2>
       <div>
         <h2>Your next STEP:</h2>
         {CHOICES.map((choice) => (
-          <button onClick={() => selectAPath(choice)}>{choice}</button>
+          <button key={choice} onClick={() => selectAPath(choice)}>
+            {choice}
+          </button>
         ))}
       </div>
     </div>

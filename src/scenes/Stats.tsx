@@ -1,10 +1,12 @@
 import React from "react";
 import { useRecoilState } from "recoil";
-import { CharaterListAtom } from "../data/atoms/CharacterListAtom";
 import { AbilityTypeKey } from "../data/records/CharacterRecord";
+import { CharacterListWriteableSelector } from "../data/selectors/CharacterListWriteableSelector";
 
 function Stats() {
-  const [characters, setCharacters] = useRecoilState(CharaterListAtom);
+  const [characters, setCharacters] = useRecoilState(
+    CharacterListWriteableSelector
+  );
   const addPotential = React.useCallback(
     (index, ability: AbilityTypeKey) => {
       setCharacters(
@@ -20,12 +22,13 @@ function Stats() {
     },
     [characters, setCharacters]
   );
+
   return (
     <div>
       <h1>Stats</h1>
       {characters.map((character, index) => {
         return (
-          <div>
+          <div key={character.name}>
             <h2>Name: {character.name}</h2>
             <h3>Level: {character.level}</h3>
             <h3>Potential: {character.potential}</h3>

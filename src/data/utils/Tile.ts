@@ -1,3 +1,5 @@
+import { randomChoice } from "./randomChoice";
+
 export const TileTypes = ["grass", "jungle", "pond", "mountain"] as const;
 
 export type TileType = typeof TileTypes[number];
@@ -20,7 +22,7 @@ export class Tile {
     return TileColorMapper.get(this.type) ?? "red";
   }
 
-  static randomTile(): Tile {
-    return new Tile(TileTypes[Math.floor(Math.random() * TileTypes.length)]);
+  static random(): Tile {
+    return new Tile(randomChoice(TileTypes));
   }
 }

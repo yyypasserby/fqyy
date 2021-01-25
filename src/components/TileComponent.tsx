@@ -1,16 +1,24 @@
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
+import { UnitRecordType } from "../data/records/UnitRecord";
 import { Tile } from "../data/utils/Tile";
+import { TileStateType } from "../scenes/Battle";
 
 type Props = {
+  locX: number;
+  locY: number;
   tile: Tile;
+  tileState: TileStateType | undefined;
+  onClick: () => void;
+  unit: UnitRecordType | undefined;
 };
 
-function TileComponent({ tile }: Props) {
+function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
   const [isHover, setIsHover] = React.useState<boolean>(false);
 
   return (
     <span
+      onClick={onClick}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       className={css([
@@ -20,10 +28,11 @@ function TileComponent({ tile }: Props) {
             backgroundColor: tile.getColor(),
           },
         }).tileColor,
+        tileState === "showMove" && styles.tileShowMove,
         isHover && styles.tileHover,
       ])}
     >
-      {tile.type}
+      {unit && <span className={css(styles.circle)}></span>}
     </span>
   );
 }
@@ -38,5 +47,15 @@ const styles = StyleSheet.create({
   },
   tileHover: {
     boxShadow: "0 0 0 4px snow inset",
+  },
+  circle: {
+    width: 100,
+    height: 100,
+    background: "red",
+    borderRadius: "50%",
+    display: "inline-block",
+  },
+  tileShowMove: {
+    backgroundColor: "mediumblue",
   },
 });
