@@ -1,12 +1,12 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { pathHistoryAtom } from "../data/atoms/pathHistoryAtom";
-import { pathHistorySelector } from "../data/selectors/pathHistorySelectors";
+import { PathHistoryListAtom } from "../data/atoms/PathHistoryListAtom";
+import { PathHistoryInfoSelector } from "../data/selectors/PathHistoryInfoSelector";
 
 const CHOICES = [1, 2, 3];
 function Paths() {
-  const [pathHistory, setPathHistory] = useRecoilState(pathHistoryAtom);
-  const { pathLength, lastPath } = useRecoilValue(pathHistorySelector);
+  const [pathHistory, setPathHistory] = useRecoilState(PathHistoryListAtom);
+  const { pathLength, lastPath } = useRecoilValue(PathHistoryInfoSelector);
   const selectAPath = React.useCallback(
     (item) => {
       setPathHistory(pathHistory.push(item));

@@ -1,9 +1,11 @@
 import { css, StyleSheet } from "aphrodite";
+import React from "react";
 import { useRecoilValue } from "recoil";
-import { mapAtom } from "../data/atoms/mapAtom";
+import TileComponent from "../components/TileComponent";
+import { MapAtom } from "../data/atoms/MapAtom";
 
 function Battle() {
-  const map = useRecoilValue(mapAtom);
+  const map = useRecoilValue(MapAtom);
 
   return (
     <div>
@@ -12,19 +14,7 @@ function Battle() {
         {map.tiles.map((row, i) => (
           <div className={css(styles.row)} key={i}>
             {row.map((tile, j) => (
-              <span
-                className={css([
-                  styles.tile,
-                  StyleSheet.create({
-                    tileColor: {
-                      backgroundColor: tile.getColor(),
-                    },
-                  }).tileColor,
-                ])}
-                key={j}
-              >
-                {i + ", " + j + " - " + tile.type}
-              </span>
+              <TileComponent key={j} tile={tile} />
             ))}
           </div>
         ))}
@@ -38,10 +28,5 @@ export default Battle;
 const styles = StyleSheet.create({
   row: {
     height: 100,
-  },
-  tile: {
-    height: 100,
-    width: 100,
-    display: "inline-block",
   },
 });

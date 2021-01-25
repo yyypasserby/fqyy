@@ -1,11 +1,12 @@
 import React from "react";
 import { useRecoilState } from "recoil";
-import { AbilityKey, charaterAtom } from "../data/atoms/characterAtom";
+import { CharaterListAtom } from "../data/atoms/CharacterListAtom";
+import { AbilityTypeKey } from "../data/records/CharacterRecord";
 
 function Stats() {
-  const [characters, setCharacters] = useRecoilState(charaterAtom);
+  const [characters, setCharacters] = useRecoilState(CharaterListAtom);
   const addPotential = React.useCallback(
-    (index, ability: AbilityKey) => {
+    (index, ability: AbilityTypeKey) => {
       setCharacters(
         characters.update(index, (character) => {
           if (character.get("potential") > 0) {
