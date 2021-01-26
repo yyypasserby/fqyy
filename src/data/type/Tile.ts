@@ -1,4 +1,4 @@
-import { randomChoice } from "./randomChoice";
+import { randomChoice } from "../../utils/randomChoice";
 
 export const TileTypes = ["grass", "jungle", "pond", "mountain"] as const;
 

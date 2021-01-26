@@ -6,8 +6,8 @@ import {
   WeatherTypes,
 } from "../records/BattleRecord";
 import { UnitRecord, UnitRecordType } from "../records/UnitRecord";
-import { BattleMap } from "../utils/BattleMap";
-import { randomChoice } from "../utils/randomChoice";
+import { BattleMap } from "../type/BattleMap";
+import { randomChoice } from "../../utils/randomChoice";
 import { GameAtom } from "./GameAtom";
 
 export const BATTLE_MAP_MAX_HEIGHT = 10;

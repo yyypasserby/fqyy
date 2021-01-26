@@ -1,7 +1,7 @@
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import { UnitRecordType } from "../data/records/UnitRecord";
-import { Tile } from "../data/utils/Tile";
+import { Tile } from "../data/type/Tile";
 import { TileStateType } from "../scenes/Battle";
 
 type Props = {

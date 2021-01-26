@@ -1,5 +1,5 @@
 import { List, Record, RecordOf } from "immutable";
-import { BattleMap } from "../utils/BattleMap";
+import { BattleMap } from "../type/BattleMap";
 import { UnitRecordType } from "./UnitRecord";
 
 export const WeatherTypes = ["sunny", "rainy", "windy", "snowy"] as const;
