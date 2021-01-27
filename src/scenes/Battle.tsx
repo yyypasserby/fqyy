@@ -1,30 +1,29 @@
 import { css, StyleSheet } from "aphrodite";
 import { List } from "immutable";
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import TileComponent from "../components/TileComponent";
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { BattleLocationInfoSelector } from "../data/selectors/BattleLocationInfoSelector";
 import { LocationType } from "../data/type/LocationType";
 import { computeMovableLocations } from "../utils/computeMovableLocations";
+import { useResetState } from "../utils/useResetState";
 
 export type TileStateType = "normal" | "showMove";
 export type ActionModeType = "empty" | "InMove" | "InAction";
 
 function Battle() {
-  const { map } = useRecoilValue(BattleAtom);
+  const [{ map }] = useRecoilState(BattleAtom);
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
 
-  const [mapState, setMapState] = React.useState(
-    List<TileStateType>(
-      map.tiles.flatMap((i) => new Array(i.length).fill("normal"))
-    )
+  const initialMapState = React.useMemo(
+    () =>
+      List<TileStateType>(
+        map.tiles.flatMap((i) => new Array(i.length).fill("normal"))
+      ),
+    [map.tiles]
   );
-  const [action, setAction] = React.useState<[ActionModeType, LocationType]>([
-    "empty",
-    [0, 0],
-  ]);
-
+  const [mapState, setMapState, resetMapState] = useResetState(initialMapState);
   const setBatchMapState = React.useCallback(
     (locations: LocationType[], tileState: TileStateType) => {
       setMapState((prev) => {
@@ -35,82 +34,99 @@ function Battle() {
         });
       });
     },
-    [map.width]
+    [map.width, setMapState]
   );
 
-  const onOurUnitClick = React.useCallback(
-    ([locX, locY]) => {
-      const unitRecord = battleLocationInfo(locX, locY);
-      if (unitRecord == null) {
-        return;
-      }
-
-      const [actionMode, actionTarget] = action;
-      let nextActionMode = actionMode,
-        nextActionTarget = actionTarget;
-      if (actionMode === "empty") {
-        nextActionMode = "InMove";
-        nextActionTarget = [locX, locY];
-      }
-
-      setAction([nextActionMode, nextActionTarget]);
-    },
-    [action, battleLocationInfo]
+  const initialMapAction: [ActionModeType, LocationType | null] = [
+    "empty",
+    null,
+  ];
+  const [mapAction, setMapAction, resetMapAction] = useResetState(
+    initialMapAction
   );
-  const onNonOurUnitClick = React.useCallback(
-    ([locX, locY]) => {
-      const unitRecord = battleLocationInfo(locX, locY);
+
+  const onEmptyModeClick = React.useCallback(
+    ([x, y]) => {
+      const unitRecord = battleLocationInfo(x, y);
       if (unitRecord != null) {
-        return;
+        setMapAction(["InMove", [x, y]]);
       }
-
-      const [actionMode, actionTarget] = action;
-      let nextActionMode = actionMode,
-        nextActionTarget = actionTarget;
-
-      if (actionMode === "InMove") {
-        nextActionMode = "empty";
-        nextActionTarget = [0, 0];
-      }
-
-      setAction([nextActionMode, nextActionTarget]);
     },
-    [action, battleLocationInfo]
+    [battleLocationInfo, setMapAction]
   );
-  const onTileComponentClick = React.useCallback(
-    ([locX, locY]) => {
-      onOurUnitClick([locX, locY]);
-      onNonOurUnitClick([locX, locY]);
+  const onInMoveModeClick = React.useCallback(
+    ([x, y]) => {
+      const isMovableArea = mapState.get(x + y * map.width) === "showMove";
+      const [, target] = mapAction;
+      if (isMovableArea) {
+        const unitRecord = battleLocationInfo(x, y);
+        if (target == null) {
+          return console.error("bad state for mapAction target");
+        }
+        const [targetX, targetY] = target;
+        const targetRecord = battleLocationInfo(targetX, targetY);
+        // Doesn't have a unit on the position
+        if (unitRecord == null || unitRecord === targetRecord) {
+          // TODO update battle info to move the unit
+          console.log(targetRecord?.name);
+        } else {
+          alert("Can't move to that field");
+        }
+      } else {
+        resetMapAction();
+      }
     },
-    [onNonOurUnitClick, onOurUnitClick]
+    [battleLocationInfo, map.width, mapAction, mapState, resetMapAction]
+  );
+  const onInActionModeClick = React.useCallback(([x, y]) => {}, []);
+  const onTileComponentClick = React.useCallback(
+    (location) => {
+      const [mode] = mapAction;
+      switch (mode) {
+        case "empty":
+          onEmptyModeClick(location);
+          break;
+        case "InMove":
+          onInMoveModeClick(location);
+          break;
+        case "InAction":
+          onInActionModeClick(location);
+          break;
+      }
+    },
+    [mapAction, onEmptyModeClick, onInActionModeClick, onInMoveModeClick]
   );
 
   React.useEffect(() => {
-    const [actionMode, actionTarget] = action;
+    const [actionMode, actionTarget] = mapAction;
     switch (actionMode) {
       case "InMove":
-        const [x, y] = actionTarget;
-        const unitRecord = battleLocationInfo(x, y);
-        setBatchMapState(
-          computeMovableLocations(
-            actionTarget,
-            unitRecord?.move ?? 1,
-            map.height,
-            map.width
-          ),
-          "showMove"
-        );
+        if (actionTarget != null) {
+          const [x, y] = actionTarget;
+          const unitRecord = battleLocationInfo(x, y);
+          setBatchMapState(
+            computeMovableLocations(
+              actionTarget,
+              unitRecord?.move ?? 1,
+              map.height,
+              map.width
+            ),
+            "showMove"
+          );
+        }
         break;
       case "empty":
-        const array = List(
-          new Array<TileStateType>(map.height * map.width).fill("normal")
-        );
-        setMapState(array);
-        break;
-      default:
+        resetMapState();
         break;
     }
-  }, [action, battleLocationInfo, map.height, map.width, setBatchMapState]);
+  }, [
+    mapAction,
+    battleLocationInfo,
+    map.height,
+    map.width,
+    setBatchMapState,
+    resetMapState,
+  ]);
 
   return (
     <div>
