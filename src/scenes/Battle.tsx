@@ -13,7 +13,7 @@ export type TileStateType = "normal" | "showMove";
 export type ActionModeType = "empty" | "InMove" | "InAction";
 
 function Battle() {
-  const [{ map }] = useRecoilState(BattleAtom);
+  const [{ map }, setBattle] = useRecoilState(BattleAtom);
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
 
   const initialMapState = React.useMemo(
@@ -68,7 +68,17 @@ function Battle() {
         // Doesn't have a unit on the position
         if (unitRecord == null || unitRecord === targetRecord) {
           // TODO update battle info to move the unit
-          console.log(targetRecord?.name);
+          setBattle((prev) => {
+            return prev.update("ourUnits", (units) => {
+              const targetIndex = units.findIndex(
+                (unit) => unit.character.name === targetRecord?.character?.name
+              );
+              return units.update(targetIndex, (unit) => {
+                return unit.set("locX", x).set("locY", y);
+              });
+            });
+          });
+          resetMapAction();
         } else {
           alert("Can't move to that field");
         }
@@ -76,7 +86,14 @@ function Battle() {
         resetMapAction();
       }
     },
-    [battleLocationInfo, map.width, mapAction, mapState, resetMapAction]
+    [
+      battleLocationInfo,
+      map.width,
+      mapAction,
+      mapState,
+      resetMapAction,
+      setBattle,
+    ]
   );
   const onInActionModeClick = React.useCallback(([x, y]) => {}, []);
   const onTileComponentClick = React.useCallback(
