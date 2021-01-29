@@ -22,6 +22,7 @@ export const BattleAtom = atom<BattleRecordType>({
       const unitList = characterList.map((character, index) => {
         const { strength, agility, intelligence } = character;
         return UnitRecord({
+          name: character.name,
           character,
           hp: strength * 5 + 100,
           mp: intelligence * 2 + 20,
@@ -33,11 +34,25 @@ export const BattleAtom = atom<BattleRecordType>({
         });
       });
 
+      const enemyUnitList = characterList.map((character, index) => {
+        const { strength, agility, intelligence } = character;
+        return UnitRecord({
+          name: "enemy " + character.name,
+          hp: strength * 5 + 100,
+          mp: intelligence * 2 + 20,
+          attack: strength * 2 + 10,
+          defense: agility * 2 + 5,
+          locX: characterList.size - 1 - index,
+          locY: 0,
+          move: 4,
+        });
+      });
+
       return BattleRecord({
         weather: randomChoice(WeatherTypes),
         map: BattleMap.random(BATTLE_MAP_MAX_HEIGHT, BATTLE_MAP_MAX_HEIGHT),
         ourUnits: unitList,
-        enemyUnits: List<UnitRecordType>(),
+        enemyUnits: enemyUnitList,
       });
     },
   }),

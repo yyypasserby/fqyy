@@ -6,11 +6,16 @@ export const WeatherTypes = ["sunny", "rainy", "windy", "snowy"] as const;
 
 export type WeatherType = typeof WeatherTypes[number];
 
-export type BattleType = {
-  weather: WeatherType;
-  map: BattleMap;
+export type BattleUnitsType = {
   ourUnits: List<UnitRecordType>;
   enemyUnits: List<UnitRecordType>;
+};
+
+export type BattleUnitsKeyType = keyof BattleUnitsType;
+
+export type BattleType = BattleUnitsType & {
+  weather: WeatherType;
+  map: BattleMap;
 };
 
 export type BattleRecordType = RecordOf<BattleType>;

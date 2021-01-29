@@ -28,11 +28,19 @@ function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
             backgroundColor: tile.getColor(),
           },
         }).tileColor,
+        tileState === "showAttack" && styles.tileShowAttack,
         tileState === "showMove" && styles.tileShowMove,
         isHover && styles.tileHover,
       ])}
     >
-      {unit && <span className={css(styles.circle)}></span>}
+      {unit && (
+        <span
+          className={css([
+            styles.circle,
+            unit.name.startsWith("enemy") ? styles.enemyUnit : styles.ourUnit,
+          ])}
+        ></span>
+      )}
     </span>
   );
 }
@@ -51,11 +59,19 @@ const styles = StyleSheet.create({
   circle: {
     width: 100,
     height: 100,
-    background: "red",
     borderRadius: "50%",
     display: "inline-block",
   },
+  ourUnit: {
+    background: "yellow",
+  },
+  enemyUnit: {
+    background: "blue",
+  },
   tileShowMove: {
     backgroundColor: "mediumblue",
+  },
+  tileShowAttack: {
+    backgroundColor: "red",
   },
 });

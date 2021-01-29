@@ -1,6 +1,7 @@
 import { selector } from "recoil";
 import { BattleAtom } from "../atoms/BattleAtom";
 import { UnitRecordType } from "../records/UnitRecord";
+import { LocationType } from "../type/LocationType";
 
 export const BattleLocationInfoSelector = selector({
   key: "BattleLocationInfoSelector",
@@ -20,7 +21,7 @@ export const BattleLocationInfoSelector = selector({
       battleLocationInfo.set(getLocIndex(unit.locX, unit.locY), unit);
     });
 
-    return (x: number, y: number) => {
+    return ([x, y]: LocationType) => {
       return battleLocationInfo.get(getLocIndex(x, y));
     };
   },
