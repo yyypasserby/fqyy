@@ -1,8 +1,9 @@
 import { css, StyleSheet } from "aphrodite";
 import { List } from "immutable";
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import TileComponent from "../components/TileComponent";
+import { useMoveUnitAction } from "../data/atomActionHooks/BattleAtomHooks";
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { BattleLocationInfoSelector } from "../data/selectors/BattleLocationInfoSelector";
 import { LocationType } from "../data/type/LocationType";
@@ -14,8 +15,9 @@ export type TileStateType = "normal" | "showMove" | "showAttack";
 export type ActionModeType = "empty" | "InMove" | "InAction";
 
 function Battle() {
-  const [{ map, enemyUnits }, setBattle] = useRecoilState(BattleAtom);
+  const { map, enemyUnits } = useRecoilValue(BattleAtom);
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
+  const moveUnitAction = useMoveUnitAction();
 
   const initialMapState = React.useMemo(
     () =>
@@ -66,30 +68,10 @@ function Battle() {
         }
         const targetRecord = battleLocationInfo(actionTarget);
         // Doesn't have a unit on the position
-        console.log({ unitRecord, targetRecord, actionTarget });
         if (unitRecord == null || unitRecord === targetRecord) {
           //  Move the unit
-          setBattle((prev) => {
-            return prev
-              .update("ourUnits", (units) => {
-                const targetIndex = units.findIndex(
-                  (unit) => unit.name === targetRecord?.name
-                );
-                if (targetIndex === -1) return units;
-                return units.update(targetIndex, (unit) => {
-                  return unit.set("locX", x).set("locY", y);
-                });
-              })
-              .update("enemyUnits", (units) => {
-                const targetIndex = units.findIndex(
-                  (unit) => unit.name === targetRecord?.name
-                );
-                if (targetIndex === -1) return units;
-                return units.update(targetIndex, (unit) => {
-                  return unit.set("locX", x).set("locY", y);
-                });
-              });
-          });
+          targetRecord?.name != null &&
+            moveUnitAction(targetRecord?.name, [x, y]);
           setMapAction(["InAction", [x, y]]);
         } else {
           alert("Can't move to that field");
@@ -103,8 +85,8 @@ function Battle() {
       battleLocationInfo,
       map.width,
       mapState,
+      moveUnitAction,
       resetMapAction,
-      setBattle,
       setMapAction,
     ]
   );
