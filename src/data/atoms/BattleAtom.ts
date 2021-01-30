@@ -1,11 +1,10 @@
-import { List } from "immutable";
 import { atom, selector } from "recoil";
 import {
   BattleRecord,
   BattleRecordType,
   WeatherTypes,
 } from "../records/BattleRecord";
-import { UnitRecord, UnitRecordType } from "../records/UnitRecord";
+import { UnitRecord } from "../records/UnitRecord";
 import { BattleMap } from "../type/BattleMap";
 import { randomChoice } from "../../utils/randomChoice";
 import { GameAtom } from "./GameAtom";

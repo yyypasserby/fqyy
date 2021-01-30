@@ -1,8 +1,9 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
+import { useAddPathAction } from "../data/atomActionHooks/GameAtomHooks";
 import { BattleAtom } from "../data/atoms/BattleAtom";
-import { LastPathWriteableSelector } from "../data/selectors/LastPathWriteableSelector";
+import { LastPathSelector } from "../data/selectors/LastPathSelector";
 import { PathHistoryListSelector } from "../data/selectors/PathHistoryListSelector";
 
 const CHOICES = [1, 2, 3];
@@ -10,16 +11,18 @@ const CHOICES = [1, 2, 3];
 function Paths() {
   const routerHistory = useHistory();
   const pathHistoryList = useRecoilValue(PathHistoryListSelector);
-  const [lastPath, addPath] = useRecoilState(LastPathWriteableSelector);
+  const lastPath = useRecoilValue(LastPathSelector);
+
+  const addPathAction = useAddPathAction();
   const resetBattle = useResetRecoilState(BattleAtom);
   const selectAPath = React.useCallback(
     (item: number) => {
-      addPath(item);
+      addPathAction(item);
       resetBattle();
 
       routerHistory.push("/battle");
     },
-    [addPath, resetBattle, routerHistory]
+    [addPathAction, resetBattle, routerHistory]
   );
 
   return (

@@ -48,7 +48,7 @@ function Battle() {
   const [actionMode, actionTarget] = mapAction;
 
   const onEmptyModeClick = React.useCallback(
-    ([x, y]) => {
+    ([x, y]: LocationType) => {
       const unitRecord = battleLocationInfo([x, y]);
       if (unitRecord != null) {
         setMapAction(["InMove", [x, y]]);
@@ -57,7 +57,7 @@ function Battle() {
     [battleLocationInfo, setMapAction]
   );
   const onInMoveModeClick = React.useCallback(
-    ([x, y]) => {
+    ([x, y]: LocationType) => {
       const isMovableArea = mapState.get(x + y * map.width) === "showMove";
       if (isMovableArea) {
         const unitRecord = battleLocationInfo([x, y]);
@@ -109,7 +109,7 @@ function Battle() {
     ]
   );
   const onInActionModeClick = React.useCallback(
-    ([x, y]) => {
+    ([x, y]: LocationType) => {
       const isAttackArea = mapState.get(x + y * map.width) === "showAttack";
       if (isAttackArea) {
         const unitRecord = battleLocationInfo([x, y]);
@@ -137,7 +137,7 @@ function Battle() {
   }, [resetMapAction]);
 
   const onTileComponentClick = React.useCallback(
-    (location) => {
+    (location: LocationType) => {
       switch (actionMode) {
         case "empty":
           onEmptyModeClick(location);

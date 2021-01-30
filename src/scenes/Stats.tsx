@@ -1,27 +1,11 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { AbilityTypeKey } from "../data/records/CharacterRecord";
-import { CharacterListWriteableSelector } from "../data/selectors/CharacterListWriteableSelector";
+import { useRecoilValue } from "recoil";
+import { useAddPotentialAction } from "../data/atomActionHooks/GameAtomHooks";
+import { CharacterListSelector } from "../data/selectors/CharacterListSelector";
 
 function Stats() {
-  const [characters, setCharacters] = useRecoilState(
-    CharacterListWriteableSelector
-  );
-  const addPotential = React.useCallback(
-    (index, ability: AbilityTypeKey) => {
-      setCharacters(
-        characters.update(index, (character) => {
-          if (character.get("potential") > 0) {
-            return character
-              .update(ability, (val) => val + 1)
-              .update("potential", (val) => val - 1);
-          }
-          return character;
-        })
-      );
-    },
-    [characters, setCharacters]
-  );
+  const characters = useRecoilValue(CharacterListSelector);
+  const addPotential = useAddPotentialAction();
 
   return (
     <div>
