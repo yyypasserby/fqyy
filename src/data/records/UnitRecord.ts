@@ -11,6 +11,7 @@ export type UnitType = {
   move: number;
   locX: number; // Width
   locY: number; // Height
+  currentTurn: number; // The turn that the unit has finished its action
 };
 
 export type UnitRecordType = RecordOf<UnitType>;
@@ -25,4 +26,5 @@ export const UnitRecord = Record<UnitType>({
   locX: 0,
   locY: 0,
   move: 4,
+  currentTurn: 0,
 });

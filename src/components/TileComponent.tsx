@@ -1,5 +1,7 @@
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
+import { useRecoilValue } from "recoil";
+import { BattleAtom } from "../data/atoms/BattleAtom";
 import { UnitRecordType } from "../data/records/UnitRecord";
 import { Tile } from "../data/type/Tile";
 import { TileStateType } from "../data/type/TileStateType";
@@ -14,6 +16,7 @@ type Props = {
 };
 
 function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
+  const { currentTurn, phase } = useRecoilValue(BattleAtom);
   const [isHover, setIsHover] = React.useState<boolean>(false);
 
   return (
@@ -37,7 +40,13 @@ function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
         <span
           className={css([
             styles.circle,
-            unit.name.startsWith("enemy") ? styles.enemyUnit : styles.ourUnit,
+            unit.name.startsWith("enemy")
+              ? unit.currentTurn < currentTurn
+                ? styles.enemyUnit
+                : styles.enemyUnitFinish
+              : unit.currentTurn < currentTurn
+              ? styles.ourUnit
+              : styles.ourUnitFinish,
           ])}
         ></span>
       )}
@@ -65,8 +74,14 @@ const styles = StyleSheet.create({
   ourUnit: {
     background: "yellow",
   },
+  ourUnitFinish: {
+    background: "gold",
+  },
   enemyUnit: {
     background: "blue",
+  },
+  enemyUnitFinish: {
+    background: "navy",
   },
   tileShowMove: {
     backgroundColor: "mediumblue",

@@ -2,17 +2,26 @@ import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import TileComponent from "../components/TileComponent";
-import { useMoveUnitAction } from "../data/atomActionHooks/BattleAtomHooks";
+import {
+  useEndTurnAction,
+  useEndUnitPhaseAction,
+  useMoveUnitAction,
+} from "../data/atomActionHooks/BattleAtomHooks";
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { BattleMapActionRecord } from "../data/records/BattleMapActionRecord";
 import { BattleLocationInfoSelector } from "../data/selectors/BattleLocationInfoSelector";
 import { LocationType } from "../data/type/LocationType";
+import { getPhaseDescription } from "../utils/getPhaseDescription";
 import { useMapActionEffect } from "./BattleHooks";
 
 function Battle() {
-  const { map, enemyUnits } = useRecoilValue(BattleAtom);
+  const { map, enemyUnits, currentTurn, maxTurn, phase } = useRecoilValue(
+    BattleAtom
+  );
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
   const moveUnitAction = useMoveUnitAction();
+  const endUnitPhaseAction = useEndUnitPhaseAction();
+  const endTurnAction = useEndTurnAction();
   const [
     { actionMode, actionTargetLocation },
     mapState,
@@ -97,10 +106,6 @@ function Battle() {
     },
     [actionTargetLocation, battleLocationInfo, enemyUnits, map.width, mapState]
   );
-  const endTurn = React.useCallback(() => {
-    resetMapAction();
-  }, [resetMapAction]);
-
   const onTileComponentClick = React.useCallback(
     (location: LocationType) => {
       switch (actionMode) {
@@ -118,9 +123,36 @@ function Battle() {
     [actionMode, onEmptyModeClick, onInActionModeClick, onInMoveModeClick]
   );
 
+  const endPhase = React.useCallback(() => {
+    resetMapAction();
+
+    if (actionTargetLocation == null) {
+      return console.error("bad state for mapAction target");
+    }
+    const targetRecord = battleLocationInfo(actionTargetLocation);
+    targetRecord?.name && endUnitPhaseAction(targetRecord?.name);
+  }, [
+    actionTargetLocation,
+    battleLocationInfo,
+    endUnitPhaseAction,
+    resetMapAction,
+  ]);
+
   return (
     <div>
       <h1>Battle</h1>
+      <h2>Max turn: {maxTurn}</h2>
+      <h2>
+        Turn {currentTurn}: {getPhaseDescription(phase)}
+      </h2>
+      <button onClick={endTurnAction}>End Turn</button>
+      {actionMode === "InAction" && (
+        <div>
+          <h2>Unit Actions</h2>
+          <button onClick={endPhase}>End Phase</button>
+          <button onClick={() => {}}>Cancel</button>
+        </div>
+      )}
       <div>
         {map.tiles.map((row, i) => (
           <div className={css(styles.row)} key={i}>
@@ -140,7 +172,6 @@ function Battle() {
           </div>
         ))}
       </div>
-      {actionMode === "InAction" && <button onClick={endTurn}>End Turn</button>}
     </div>
   );
 }

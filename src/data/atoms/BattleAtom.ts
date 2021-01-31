@@ -11,6 +11,7 @@ import { GameAtom } from "./GameAtom";
 
 export const BATTLE_MAP_MAX_HEIGHT = 10;
 export const BATTLE_MAP_MAX_WIDTH = 10;
+export const BATTLE_MAX_TURN = 20;
 
 export const BattleAtom = atom<BattleRecordType>({
   key: "BattleAtom",
@@ -52,6 +53,9 @@ export const BattleAtom = atom<BattleRecordType>({
         map: BattleMap.random(BATTLE_MAP_MAX_HEIGHT, BATTLE_MAP_MAX_HEIGHT),
         ourUnits: unitList,
         enemyUnits: enemyUnitList,
+        currentTurn: 1,
+        maxTurn: BATTLE_MAX_TURN,
+        phase: "ourPhase",
       });
     },
   }),
