@@ -1,59 +1,35 @@
 import { css, StyleSheet } from "aphrodite";
-import { List } from "immutable";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import TileComponent from "../components/TileComponent";
 import { useMoveUnitAction } from "../data/atomActionHooks/BattleAtomHooks";
 import { BattleAtom } from "../data/atoms/BattleAtom";
+import { BattleMapActionRecord } from "../data/records/BattleMapActionRecord";
 import { BattleLocationInfoSelector } from "../data/selectors/BattleLocationInfoSelector";
 import { LocationType } from "../data/type/LocationType";
-import { computeMovableLocations } from "../utils/computeMovableLocations";
-import { usePrevious } from "../utils/usePrevious";
-import { useResetState } from "../utils/useResetState";
-
-export type TileStateType = "normal" | "showMove" | "showAttack";
-export type ActionModeType = "empty" | "InMove" | "InAction";
+import { useMapActionEffect } from "./BattleHooks";
 
 function Battle() {
   const { map, enemyUnits } = useRecoilValue(BattleAtom);
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
   const moveUnitAction = useMoveUnitAction();
-
-  const initialMapState = React.useMemo(
-    () =>
-      List<TileStateType>(
-        map.tiles.flatMap((i) => new Array(i.length).fill("normal"))
-      ),
-    [map.tiles]
-  );
-  const [mapState, setMapState, resetMapState] = useResetState(initialMapState);
-  const setBatchMapState = React.useCallback(
-    (locations: LocationType[], tileState: TileStateType) => {
-      setMapState((prev) => {
-        return prev.withMutations((mutable) => {
-          locations.forEach(([locX, locY]) => {
-            mutable.set(locX + locY * map.width, tileState);
-          });
-        });
-      });
-    },
-    [map.width, setMapState]
-  );
-
-  const initialMapAction: [ActionModeType, LocationType | null] = [
-    "empty",
-    null,
-  ];
-  const [mapAction, setMapAction, resetMapAction] = useResetState(
-    initialMapAction
-  );
-  const [actionMode, actionTarget] = mapAction;
+  const [
+    { actionMode, actionTargetLocation },
+    mapState,
+    setMapAction,
+    resetMapAction,
+  ] = useMapActionEffect();
 
   const onEmptyModeClick = React.useCallback(
     ([x, y]: LocationType) => {
       const unitRecord = battleLocationInfo([x, y]);
       if (unitRecord != null) {
-        setMapAction(["InMove", [x, y]]);
+        setMapAction(
+          BattleMapActionRecord({
+            actionMode: "InMove",
+            actionTargetLocation: [x, y],
+          })
+        );
       }
     },
     [battleLocationInfo, setMapAction]
@@ -62,17 +38,23 @@ function Battle() {
     ([x, y]: LocationType) => {
       const isMovableArea = mapState.get(x + y * map.width) === "showMove";
       if (isMovableArea) {
-        const unitRecord = battleLocationInfo([x, y]);
-        if (actionTarget == null) {
+        if (actionTargetLocation == null) {
           return console.error("bad state for mapAction target");
         }
-        const targetRecord = battleLocationInfo(actionTarget);
+        const targetRecord = battleLocationInfo(actionTargetLocation);
+
         // Doesn't have a unit on the position
+        const unitRecord = battleLocationInfo([x, y]);
         if (unitRecord == null || unitRecord === targetRecord) {
           //  Move the unit
           targetRecord?.name != null &&
             moveUnitAction(targetRecord?.name, [x, y]);
-          setMapAction(["InAction", [x, y]]);
+          setMapAction(
+            BattleMapActionRecord({
+              actionMode: "InAction",
+              actionTargetLocation: [x, y],
+            })
+          );
         } else {
           alert("Can't move to that field");
         }
@@ -81,7 +63,7 @@ function Battle() {
       }
     },
     [
-      actionTarget,
+      actionTargetLocation,
       battleLocationInfo,
       map.width,
       mapState,
@@ -94,11 +76,12 @@ function Battle() {
     ([x, y]: LocationType) => {
       const isAttackArea = mapState.get(x + y * map.width) === "showAttack";
       if (isAttackArea) {
-        const unitRecord = battleLocationInfo([x, y]);
-        if (actionTarget == null) {
+        if (actionTargetLocation == null) {
           return console.error("bad state for mapAction target");
         }
-        const targetRecord = battleLocationInfo(actionTarget);
+        const targetRecord = battleLocationInfo(actionTargetLocation);
+
+        const unitRecord = battleLocationInfo([x, y]);
         const enemyIndex = enemyUnits.findIndex(
           (unit) => unit.name === unitRecord?.name
         );
@@ -112,7 +95,7 @@ function Battle() {
         alert("It is not in the range of attack");
       }
     },
-    [actionTarget, battleLocationInfo, enemyUnits, map.width, mapState]
+    [actionTargetLocation, battleLocationInfo, enemyUnits, map.width, mapState]
   );
   const endTurn = React.useCallback(() => {
     resetMapAction();
@@ -134,50 +117,6 @@ function Battle() {
     },
     [actionMode, onEmptyModeClick, onInActionModeClick, onInMoveModeClick]
   );
-
-  const prevActionMode = usePrevious(actionMode);
-  React.useEffect(() => {
-    if (prevActionMode === actionMode) {
-      return;
-    }
-
-    resetMapState();
-    switch (actionMode) {
-      case "InAction":
-        if (actionTarget != null) {
-          setBatchMapState(
-            computeMovableLocations(actionTarget, 1, map.height, map.width),
-            "showAttack"
-          );
-        }
-        break;
-      case "InMove":
-        if (actionTarget != null) {
-          const unitRecord = battleLocationInfo(actionTarget);
-          setBatchMapState(
-            computeMovableLocations(
-              actionTarget,
-              unitRecord?.move ?? 1,
-              map.height,
-              map.width
-            ),
-            "showMove"
-          );
-        }
-        break;
-      case "empty":
-        break;
-    }
-  }, [
-    battleLocationInfo,
-    map.height,
-    map.width,
-    setBatchMapState,
-    resetMapState,
-    actionMode,
-    actionTarget,
-    prevActionMode,
-  ]);
 
   return (
     <div>

@@ -2,7 +2,7 @@ import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import { UnitRecordType } from "../data/records/UnitRecord";
 import { Tile } from "../data/type/Tile";
-import { TileStateType } from "../scenes/Battle";
+import { TileStateType } from "../data/type/TileStateType";
 
 type Props = {
   locX: number;
