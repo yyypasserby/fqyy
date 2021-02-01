@@ -10,10 +10,12 @@ import {
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { BattleMapActionRecord } from "../data/records/BattleMapActionRecord";
 import { BattleLocationInfoSelector } from "../data/selectors/BattleLocationInfoSelector";
+import { UnitSideSelector } from "../data/selectors/UnitSideSelector";
 import { ActionModes } from "../data/type/ActionModes";
 import { LocationType } from "../data/type/LocationType";
 import { TileStates } from "../data/type/TileStates";
 import { getPhaseDescription } from "../utils/getPhaseDescription";
+import { isUnitPhase } from "../utils/isUnitPhase";
 import { useMapActionEffect } from "./BattleHooks";
 
 function Battle() {
@@ -26,6 +28,7 @@ function Battle() {
     weather,
   } = useRecoilValue(BattleAtom);
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
+  const unitSideInfo = useRecoilValue(UnitSideSelector);
   const moveUnitAction = useMoveUnitAction();
   const endUnitPhaseAction = useEndUnitPhaseAction();
   const endTurnAction = useEndTurnAction();
@@ -56,10 +59,20 @@ function Battle() {
         mapState.get(x + y * map.width) === TileStates.SHOW_MOVE;
       if (isMovableArea) {
         if (actionTargetLocation == null) {
-          return console.error("bad state for mapAction target");
+          return console.error("bad state for actionTargetLocation");
         }
         const targetRecord = battleLocationInfo(actionTargetLocation);
-
+        if (targetRecord == null) {
+          return console.error("bad state for battleLocationInfo");
+        }
+        const side = unitSideInfo(targetRecord.name);
+        if (side == null) {
+          return console.error("bad state for unitSideInfo");
+        }
+        if (!isUnitPhase(side, phase)) {
+          alert("Not your turn yet");
+          return;
+        }
         // Doesn't have a unit on the position
         const unitRecord = battleLocationInfo([x, y]);
         if (unitRecord == null || unitRecord === targetRecord) {
@@ -74,6 +87,7 @@ function Battle() {
           );
         } else {
           alert("Can't move to that field");
+          return;
         }
       } else {
         resetMapAction();
@@ -85,8 +99,10 @@ function Battle() {
       map.width,
       mapState,
       moveUnitAction,
+      phase,
       resetMapAction,
       setMapAction,
+      unitSideInfo,
     ]
   );
   const onInActionModeClick = React.useCallback(
