@@ -1,10 +1,10 @@
-import { PhaseType } from "../data/records/BattleRecord";
+import { Phases, PhaseType } from "../data/type/Phases";
 
 export function getPhaseDescription(phase: PhaseType): string {
   switch (phase) {
-    case "ourPhase":
+    case Phases.OUR_PHASE:
       return "Our Phase";
-    case "enemyPhase":
+    case Phases.ENEMY_PHASE:
       return "Enemy Phase";
   }
 }

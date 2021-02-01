@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useSetRecoilState } from "recoil";
 import { BattleAtom } from "../atoms/BattleAtom";
 import { LocationType } from "../type/LocationType";
+import { Phases } from "../type/Phases";
 
 export function useMoveUnitAction(): (
   name: string,
@@ -82,20 +83,20 @@ export function useEndTurnAction(): () => void {
     setBattle((prev) => {
       return prev.withMutations((mutable) => {
         const { currentTurn, phase, ourUnits, enemyUnits } = mutable;
-        if (phase === "ourPhase") {
+        if (phase === Phases.OUR_PHASE) {
           mutable.set(
             "ourUnits",
             ourUnits.map((unit) => unit.set("currentTurn", currentTurn))
           );
-          mutable.set("phase", "enemyPhase");
+          mutable.set("phase", Phases.ENEMY_PHASE);
         }
 
-        if (phase === "enemyPhase") {
+        if (phase === Phases.ENEMY_PHASE) {
           mutable.set(
             "enemyUnits",
             enemyUnits.map((unit) => unit.set("currentTurn", currentTurn))
           );
-          mutable.set("phase", "ourPhase");
+          mutable.set("phase", Phases.OUR_PHASE);
           mutable.set("currentTurn", currentTurn + 1);
         }
       });

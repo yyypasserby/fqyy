@@ -1,6 +1,6 @@
 import { Record, RecordOf } from "immutable";
+import { ActionModes, ActionModeType } from "../type/ActionModes";
 import { LocationType } from "../type/LocationType";
-export type ActionModeType = "empty" | "InMove" | "InAction";
 
 export type BattleMapActionType = {
   actionMode: ActionModeType;
@@ -10,6 +10,6 @@ export type BattleMapActionType = {
 export type BattleMapActionRecordType = RecordOf<BattleMapActionType>;
 
 export const BattleMapActionRecord = Record<BattleMapActionType>({
-  actionMode: "empty",
+  actionMode: ActionModes.EMPTY,
   actionTargetLocation: null,
 });

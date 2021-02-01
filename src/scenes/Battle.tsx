@@ -10,14 +10,21 @@ import {
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { BattleMapActionRecord } from "../data/records/BattleMapActionRecord";
 import { BattleLocationInfoSelector } from "../data/selectors/BattleLocationInfoSelector";
+import { ActionModes } from "../data/type/ActionModes";
 import { LocationType } from "../data/type/LocationType";
+import { TileStates } from "../data/type/TileStates";
 import { getPhaseDescription } from "../utils/getPhaseDescription";
 import { useMapActionEffect } from "./BattleHooks";
 
 function Battle() {
-  const { map, enemyUnits, currentTurn, maxTurn, phase } = useRecoilValue(
-    BattleAtom
-  );
+  const {
+    map,
+    enemyUnits,
+    currentTurn,
+    maxTurn,
+    phase,
+    weather,
+  } = useRecoilValue(BattleAtom);
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
   const moveUnitAction = useMoveUnitAction();
   const endUnitPhaseAction = useEndUnitPhaseAction();
@@ -35,7 +42,7 @@ function Battle() {
       if (unitRecord != null) {
         setMapAction(
           BattleMapActionRecord({
-            actionMode: "InMove",
+            actionMode: ActionModes.IN_MOVE,
             actionTargetLocation: [x, y],
           })
         );
@@ -45,7 +52,8 @@ function Battle() {
   );
   const onInMoveModeClick = React.useCallback(
     ([x, y]: LocationType) => {
-      const isMovableArea = mapState.get(x + y * map.width) === "showMove";
+      const isMovableArea =
+        mapState.get(x + y * map.width) === TileStates.SHOW_MOVE;
       if (isMovableArea) {
         if (actionTargetLocation == null) {
           return console.error("bad state for mapAction target");
@@ -60,7 +68,7 @@ function Battle() {
             moveUnitAction(targetRecord?.name, [x, y]);
           setMapAction(
             BattleMapActionRecord({
-              actionMode: "InAction",
+              actionMode: ActionModes.IN_ACTION,
               actionTargetLocation: [x, y],
             })
           );
@@ -83,7 +91,8 @@ function Battle() {
   );
   const onInActionModeClick = React.useCallback(
     ([x, y]: LocationType) => {
-      const isAttackArea = mapState.get(x + y * map.width) === "showAttack";
+      const isAttackArea =
+        mapState.get(x + y * map.width) === TileStates.SHOW_ATTACK;
       if (isAttackArea) {
         if (actionTargetLocation == null) {
           return console.error("bad state for mapAction target");
@@ -109,13 +118,13 @@ function Battle() {
   const onTileComponentClick = React.useCallback(
     (location: LocationType) => {
       switch (actionMode) {
-        case "empty":
+        case ActionModes.EMPTY:
           onEmptyModeClick(location);
           break;
-        case "InMove":
+        case ActionModes.IN_MOVE:
           onInMoveModeClick(location);
           break;
-        case "InAction":
+        case ActionModes.IN_ACTION:
           onInActionModeClick(location);
           break;
       }
@@ -145,8 +154,9 @@ function Battle() {
       <h2>
         Turn {currentTurn}: {getPhaseDescription(phase)}
       </h2>
+      <h2>Weather: {weather}</h2>
       <button onClick={endTurnAction}>End Turn</button>
-      {actionMode === "InAction" && (
+      {actionMode === ActionModes.IN_ACTION && (
         <div>
           <h2>Unit Actions</h2>
           <button onClick={endPhase}>End Phase</button>

@@ -1,13 +1,11 @@
 import { atom, selector } from "recoil";
-import {
-  BattleRecord,
-  BattleRecordType,
-  WeatherTypes,
-} from "../records/BattleRecord";
+import { BattleRecord, BattleRecordType } from "../records/BattleRecord";
 import { UnitRecord } from "../records/UnitRecord";
 import { BattleMap } from "../type/BattleMap";
 import { randomChoice } from "../../utils/randomChoice";
 import { GameAtom } from "./GameAtom";
+import { Phases } from "../type/Phases";
+import { Weathers, WeatherType } from "../type/Weathers";
 
 export const BATTLE_MAP_MAX_HEIGHT = 10;
 export const BATTLE_MAP_MAX_WIDTH = 10;
@@ -49,13 +47,13 @@ export const BattleAtom = atom<BattleRecordType>({
       });
 
       return BattleRecord({
-        weather: randomChoice(WeatherTypes),
+        weather: randomChoice(Object.keys(Weathers)) as WeatherType,
         map: BattleMap.random(BATTLE_MAP_MAX_HEIGHT, BATTLE_MAP_MAX_HEIGHT),
         ourUnits: unitList,
         enemyUnits: enemyUnitList,
         currentTurn: 1,
         maxTurn: BATTLE_MAX_TURN,
-        phase: "ourPhase",
+        phase: Phases.OUR_PHASE,
       });
     },
   }),

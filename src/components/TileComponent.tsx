@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { UnitRecordType } from "../data/records/UnitRecord";
 import { Tile } from "../data/type/Tile";
-import { TileStateType } from "../data/type/TileStateType";
+import { TileStates, TileStateType } from "../data/type/TileStates";
 
 type Props = {
   locX: number;
@@ -31,8 +31,8 @@ function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
             backgroundColor: tile.getColor(),
           },
         }).tileColor,
-        tileState === "showAttack" && styles.tileShowAttack,
-        tileState === "showMove" && styles.tileShowMove,
+        tileState === TileStates.SHOW_ATTACK && styles.tileShowAttack,
+        tileState === TileStates.SHOW_MOVE && styles.tileShowMove,
         isHover && styles.tileHover,
       ])}
     >

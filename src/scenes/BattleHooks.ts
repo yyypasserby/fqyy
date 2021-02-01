@@ -7,8 +7,13 @@ import {
   BattleMapActionRecordType,
 } from "../data/records/BattleMapActionRecord";
 import { BattleLocationInfoSelector } from "../data/selectors/BattleLocationInfoSelector";
+import { ActionModes } from "../data/type/ActionModes";
 import { LocationType } from "../data/type/LocationType";
-import { MapStateType, TileStateType } from "../data/type/TileStateType";
+import {
+  MapStateType,
+  TileStates,
+  TileStateType,
+} from "../data/type/TileStates";
 import { computeMovableLocations } from "../utils/computeMovableLocations";
 import { usePrevious } from "../utils/usePrevious";
 import { useResetState } from "../utils/useResetState";
@@ -67,7 +72,7 @@ export function useMapActionEffect(): [
     resetMapState();
     const { actionMode, actionTargetLocation } = mapAction;
     switch (actionMode) {
-      case "InAction":
+      case ActionModes.IN_ACTION:
         if (actionTargetLocation != null) {
           setBatchMapState(
             computeMovableLocations(
@@ -76,11 +81,11 @@ export function useMapActionEffect(): [
               map.height,
               map.width
             ),
-            "showAttack"
+            TileStates.SHOW_ATTACK
           );
         }
         break;
-      case "InMove":
+      case ActionModes.IN_MOVE:
         if (actionTargetLocation != null) {
           const unitRecord = battleLocationInfo(actionTargetLocation);
           setBatchMapState(
@@ -90,11 +95,11 @@ export function useMapActionEffect(): [
               map.height,
               map.width
             ),
-            "showMove"
+            TileStates.SHOW_MOVE
           );
         }
         break;
-      case "empty":
+      case ActionModes.EMPTY:
         break;
     }
   }, [

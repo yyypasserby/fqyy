@@ -1,28 +1,25 @@
 import { randomChoice } from "../../utils/randomChoice";
+import { TileTypes, TileTypeType } from "./TileTypes";
 
-export const TileTypes = ["grass", "jungle", "pond", "mountain"] as const;
-
-export type TileType = typeof TileTypes[number];
-
-const TileColorMapper = new Map<TileType, string>([
-  ["grass", "mediumspringgreen"],
-  ["jungle", "darkgreen"],
-  ["pond", "lightblue"],
-  ["mountain", "tan"],
+const TileTypeColorMapper = new Map<TileTypeType, string>([
+  [TileTypes.GRASS, "mediumspringgreen"],
+  [TileTypes.JUNGLE, "darkgreen"],
+  [TileTypes.POND, "lightblue"],
+  [TileTypes.MOUNTAIN, "tan"],
 ]);
 
 export class Tile {
-  type: TileType;
+  type: TileTypeType;
 
-  constructor(tileType: TileType) {
+  constructor(tileType: TileTypeType) {
     this.type = tileType;
   }
 
   getColor(): string {
-    return TileColorMapper.get(this.type) ?? "red";
+    return TileTypeColorMapper.get(this.type) ?? "red";
   }
 
   static random(): Tile {
-    return new Tile(randomChoice(TileTypes));
+    return new Tile(randomChoice(Object.keys(TileTypes)) as TileTypeType);
   }
 }
