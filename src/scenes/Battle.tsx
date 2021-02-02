@@ -19,21 +19,16 @@ import { isUnitPhase } from "../utils/isUnitPhase";
 import { useMapActionEffect } from "./BattleHooks";
 
 function Battle() {
-  const {
-    map,
-    enemyUnits,
-    currentTurn,
-    maxTurn,
-    phase,
-    weather,
-  } = useRecoilValue(BattleAtom);
+  const { map, currentTurn, maxTurn, phase, weather } = useRecoilValue(
+    BattleAtom
+  );
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
   const unitSideInfo = useRecoilValue(UnitSideSelector);
   const moveUnitAction = useMoveUnitAction();
   const endUnitPhaseAction = useEndUnitPhaseAction();
   const endTurnAction = useEndTurnAction();
   const [
-    { actionMode, actionTargetLocation },
+    { actionMode, actionTargetLocation, actionTargetInitialLocation },
     mapState,
     setMapAction,
     resetMapAction,
@@ -47,6 +42,7 @@ function Battle() {
           BattleMapActionRecord({
             actionMode: ActionModes.IN_MOVE,
             actionTargetLocation: [x, y],
+            actionTargetInitialLocation: [x, y],
           })
         );
       }
@@ -73,16 +69,22 @@ function Battle() {
           alert("Not your turn yet");
           return;
         }
+        if (targetRecord.currentTurn >= currentTurn) {
+          alert("The unit has finished its turn");
+          return;
+        }
         // Doesn't have a unit on the position
         const unitRecord = battleLocationInfo([x, y]);
         if (unitRecord == null || unitRecord === targetRecord) {
           //  Move the unit
           targetRecord?.name != null &&
             moveUnitAction(targetRecord?.name, [x, y]);
-          setMapAction(
+          setMapAction((prevRecord) =>
             BattleMapActionRecord({
               actionMode: ActionModes.IN_ACTION,
               actionTargetLocation: [x, y],
+              actionTargetInitialLocation:
+                prevRecord.actionTargetInitialLocation,
             })
           );
         } else {
@@ -96,6 +98,7 @@ function Battle() {
     [
       actionTargetLocation,
       battleLocationInfo,
+      currentTurn,
       map.width,
       mapState,
       moveUnitAction,
@@ -113,13 +116,18 @@ function Battle() {
         if (actionTargetLocation == null) {
           return console.error("bad state for mapAction target");
         }
-        const targetRecord = battleLocationInfo(actionTargetLocation);
-
+        const actionTargetRecord = battleLocationInfo(actionTargetLocation);
         const unitRecord = battleLocationInfo([x, y]);
-        const enemyIndex = enemyUnits.findIndex(
-          (unit) => unit.name === unitRecord?.name
-        );
-        if (enemyIndex !== -1) {
+        if (actionTargetRecord == null) {
+          return console.error("bad state for battleLocationInfo");
+        }
+        if (unitRecord == null) {
+          alert("No unit there");
+          return;
+        }
+        const actionTargetSide = unitSideInfo(actionTargetRecord.name);
+        const unitSide = unitSideInfo(unitRecord.name);
+        if (unitSide !== actionTargetSide) {
           // TODO: Do a attack
           alert("Attacked");
         } else {
@@ -129,7 +137,13 @@ function Battle() {
         alert("It is not in the range of attack");
       }
     },
-    [actionTargetLocation, battleLocationInfo, enemyUnits, map.width, mapState]
+    [
+      actionTargetLocation,
+      battleLocationInfo,
+      map.width,
+      mapState,
+      unitSideInfo,
+    ]
   );
   const onTileComponentClick = React.useCallback(
     (location: LocationType) => {
@@ -148,6 +162,10 @@ function Battle() {
     [actionMode, onEmptyModeClick, onInActionModeClick, onInMoveModeClick]
   );
 
+  const endTurn = React.useCallback(() => {
+    resetMapAction();
+    endTurnAction();
+  }, [endTurnAction, resetMapAction]);
   const endPhase = React.useCallback(() => {
     resetMapAction();
 
@@ -162,6 +180,23 @@ function Battle() {
     endUnitPhaseAction,
     resetMapAction,
   ]);
+  const cancelPhase = React.useCallback(() => {
+    resetMapAction();
+
+    if (actionTargetLocation == null) {
+      return console.error("bad state for mapAction target");
+    }
+    const targetRecord = battleLocationInfo(actionTargetLocation);
+    targetRecord?.name &&
+      actionTargetInitialLocation &&
+      moveUnitAction(targetRecord?.name, actionTargetInitialLocation);
+  }, [
+    actionTargetInitialLocation,
+    actionTargetLocation,
+    battleLocationInfo,
+    moveUnitAction,
+    resetMapAction,
+  ]);
 
   return (
     <div>
@@ -171,12 +206,12 @@ function Battle() {
         Turn {currentTurn}: {getPhaseDescription(phase)}
       </h2>
       <h2>Weather: {weather}</h2>
-      <button onClick={endTurnAction}>End Turn</button>
+      <button onClick={endTurn}>End Turn</button>
       {actionMode === ActionModes.IN_ACTION && (
         <div>
           <h2>Unit Actions</h2>
           <button onClick={endPhase}>End Phase</button>
-          <button onClick={() => {}}>Cancel</button>
+          <button onClick={cancelPhase}>Cancel</button>
         </div>
       )}
       <div>

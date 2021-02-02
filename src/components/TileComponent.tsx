@@ -3,8 +3,10 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { UnitRecordType } from "../data/records/UnitRecord";
+import { UnitSideSelector } from "../data/selectors/UnitSideSelector";
 import { Tile } from "../data/type/Tile";
 import { TileStates, TileStateType } from "../data/type/TileStates";
+import { UnitSides } from "../data/type/UnitSides";
 
 type Props = {
   locX: number;
@@ -16,8 +18,9 @@ type Props = {
 };
 
 function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
-  const { currentTurn, phase } = useRecoilValue(BattleAtom);
+  const { currentTurn } = useRecoilValue(BattleAtom);
   const [isHover, setIsHover] = React.useState<boolean>(false);
+  const unitSideInfo = useRecoilValue(UnitSideSelector);
 
   return (
     <span
@@ -40,7 +43,7 @@ function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
         <span
           className={css([
             styles.circle,
-            unit.name.startsWith("enemy")
+            unitSideInfo(unit.name) === UnitSides.ENEMY_SIDE
               ? unit.currentTurn < currentTurn
                 ? styles.enemyUnit
                 : styles.enemyUnitFinish

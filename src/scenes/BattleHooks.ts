@@ -1,5 +1,5 @@
 import { List } from "immutable";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useRecoilValue } from "recoil";
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import {
@@ -51,7 +51,7 @@ export function useMapState(): [
 export function useMapActionEffect(): [
   BattleMapActionRecordType,
   MapStateType,
-  (mapAction: BattleMapActionRecordType) => void,
+  Dispatch<SetStateAction<BattleMapActionRecordType>>,
   () => void
 ] {
   const { map } = useRecoilValue(BattleAtom);
