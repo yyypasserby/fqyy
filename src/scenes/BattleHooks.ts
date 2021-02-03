@@ -1,14 +1,17 @@
 import { List } from "immutable";
 import React, { Dispatch, SetStateAction } from "react";
 import { useRecoilValue } from "recoil";
+import { useEndTurnAction } from "../data/atomActionHooks/BattleAtomHooks";
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import {
   BattleMapActionRecord,
   BattleMapActionRecordType,
 } from "../data/records/BattleMapActionRecord";
 import { BattleLocationInfoSelector } from "../data/selectors/BattleLocationInfoSelector";
+import { UnitListSelector } from "../data/selectors/UnitListSelector";
 import { ActionModes } from "../data/type/ActionModes";
 import { LocationType } from "../data/type/LocationType";
+import { Phases } from "../data/type/Phases";
 import {
   MapStateType,
   TileStates,
@@ -113,4 +116,22 @@ export function useMapActionEffect(): [
   ]);
 
   return [mapAction, mapState, setMapAction, resetMapAction];
+}
+
+export function useAutoEndTurnEffect(): void {
+  const { currentTurn, phase, ourUnits, enemyUnits } = useRecoilValue(
+    BattleAtom
+  );
+  const endTurnAction = useEndTurnAction();
+
+  React.useEffect(() => {
+    let units = phase === Phases.OUR_PHASE ? ourUnits : enemyUnits;
+    if (units.find((unit) => unit.currentTurn < currentTurn) == null) {
+      // eslint-disable-next-line no-restricted-globals
+      const confirmation = confirm("Do you want to end turn?");
+      if (confirmation) {
+        endTurnAction();
+      }
+    }
+  }, [currentTurn, endTurnAction, enemyUnits, ourUnits, phase]);
 }

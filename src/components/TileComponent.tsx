@@ -39,6 +39,15 @@ function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
         isHover && styles.tileHover,
       ])}
     >
+      {isHover && unit && (
+        <span className={css(styles.unitInfo)}>
+          <div>{unit.name}</div>
+          <div>HP: {unit.hp}</div>
+          <div>MP: {unit.mp}</div>
+          <div>Attack: {unit.attack}</div>
+          <div>Defense: {unit.defense}</div>
+        </span>
+      )}
       {unit && (
         <span
           className={css([
@@ -60,10 +69,22 @@ function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
 export default TileComponent;
 
 const styles = StyleSheet.create({
+  unitInfo: {
+    position: "absolute",
+    left: 100,
+    bottom: 50,
+    height: 100,
+    width: 120,
+    color: "white",
+    backgroundColor: "black",
+    zIndex: 1,
+    borderRadius: 6,
+  },
   tile: {
     height: 100,
     width: 100,
     display: "inline-block",
+    position: "relative",
   },
   tileHover: {
     boxShadow: "0 0 0 4px snow inset",

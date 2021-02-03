@@ -3,6 +3,7 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 import TileComponent from "../components/TileComponent";
 import {
+  useAttackUnitAction,
   useEndTurnAction,
   useEndUnitPhaseAction,
   useMoveUnitAction,
@@ -16,7 +17,7 @@ import { LocationType } from "../data/type/LocationType";
 import { TileStates } from "../data/type/TileStates";
 import { getPhaseDescription } from "../utils/getPhaseDescription";
 import { isUnitPhase } from "../utils/isUnitPhase";
-import { useMapActionEffect } from "./BattleHooks";
+import { useAutoEndTurnEffect, useMapActionEffect } from "./BattleHooks";
 
 function Battle() {
   const { map, currentTurn, maxTurn, phase, weather } = useRecoilValue(
@@ -25,6 +26,7 @@ function Battle() {
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
   const unitSideInfo = useRecoilValue(UnitSideSelector);
   const moveUnitAction = useMoveUnitAction();
+  const attackUnitAction = useAttackUnitAction();
   const endUnitPhaseAction = useEndUnitPhaseAction();
   const endTurnAction = useEndTurnAction();
   const [
@@ -33,6 +35,7 @@ function Battle() {
     setMapAction,
     resetMapAction,
   ] = useMapActionEffect();
+  useAutoEndTurnEffect();
 
   const onEmptyModeClick = React.useCallback(
     ([x, y]: LocationType) => {
@@ -128,8 +131,9 @@ function Battle() {
         const actionTargetSide = unitSideInfo(actionTargetRecord.name);
         const unitSide = unitSideInfo(unitRecord.name);
         if (unitSide !== actionTargetSide) {
-          // TODO: Do a attack
-          alert("Attacked");
+          attackUnitAction(actionTargetRecord.name, unitRecord.name);
+          resetMapAction();
+          endUnitPhaseAction(actionTargetRecord.name);
         } else {
           alert("It is not an enemy");
         }
@@ -139,9 +143,12 @@ function Battle() {
     },
     [
       actionTargetLocation,
+      attackUnitAction,
       battleLocationInfo,
+      endUnitPhaseAction,
       map.width,
       mapState,
+      resetMapAction,
       unitSideInfo,
     ]
   );
@@ -208,7 +215,7 @@ function Battle() {
       <h2>Weather: {weather}</h2>
       <button onClick={endTurn}>End Turn</button>
       {actionMode === ActionModes.IN_ACTION && (
-        <div>
+        <div className={css(styles.unitActionSection)}>
           <h2>Unit Actions</h2>
           <button onClick={endPhase}>End Phase</button>
           <button onClick={cancelPhase}>Cancel</button>
@@ -240,6 +247,9 @@ function Battle() {
 export default Battle;
 
 const styles = StyleSheet.create({
+  unitActionSection: {
+    float: "right",
+  },
   row: {
     height: 100,
   },
