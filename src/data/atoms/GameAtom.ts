@@ -16,14 +16,14 @@ export const GameAtom = atom({
         name: "warrior",
         level: 1,
       }),
-      CharacterRecord({
-        name: "theif",
-        level: 1,
-      }),
-      CharacterRecord({
-        name: "mage",
-        level: 1,
-      }),
+      // CharacterRecord({
+      //   name: "theif",
+      //   level: 1,
+      // }),
+      // CharacterRecord({
+      //   name: "mage",
+      //   level: 1,
+      // }),
     ]),
     pathHistoryList: List<number>([]),
   }),

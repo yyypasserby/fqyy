@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useRecoilValue, useResetRecoilState } from "recoil";
-import { useAddPathAction } from "../data/atomActionHooks/GameAtomHooks";
+import { useAddPathAction } from "../data/actions/useAddPathAction";
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { LastPathSelector } from "../data/selectors/LastPathSelector";
 import { PathHistoryListSelector } from "../data/selectors/PathHistoryListSelector";

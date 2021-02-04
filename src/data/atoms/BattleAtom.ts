@@ -18,7 +18,7 @@ export const BattleAtom = atom<BattleRecordType>({
     get: ({ get }) => {
       const { characterList } = get(GameAtom);
       const unitList = characterList.map((character, index) => {
-        const { strength, agility, intelligence } = character;
+        const { strength, agility, intelligence, move } = character;
         return UnitRecord({
           name: character.name,
           character,
@@ -28,12 +28,12 @@ export const BattleAtom = atom<BattleRecordType>({
           defense: agility * 2 + 5,
           locX: BATTLE_MAP_MAX_WIDTH - (characterList.size - index),
           locY: BATTLE_MAP_MAX_HEIGHT - 1,
-          move: 4,
+          move,
         });
       });
 
       const enemyUnitList = characterList.map((character, index) => {
-        const { strength, agility, intelligence } = character;
+        const { strength, agility, intelligence, move } = character;
         return UnitRecord({
           name: "enemy " + character.name,
           hp: strength * 5 + 100,
@@ -42,7 +42,7 @@ export const BattleAtom = atom<BattleRecordType>({
           defense: agility * 2 + 5,
           locX: characterList.size - 1 - index,
           locY: 0,
-          move: 4,
+          move,
         });
       });
 

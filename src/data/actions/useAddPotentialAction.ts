@@ -25,17 +25,3 @@ export function useAddPotentialAction(): (
     [setGame]
   );
 }
-
-export function useAddPathAction(): (item: number) => void {
-  const setGame = useSetRecoilState(GameAtom);
-  return useCallback(
-    (item: number) => {
-      setGame((game) => {
-        return game.update("pathHistoryList", (list) => {
-          return list.push(item);
-        });
-      });
-    },
-    [setGame]
-  );
-}

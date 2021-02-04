@@ -2,12 +2,10 @@ import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import TileComponent from "../components/TileComponent";
-import {
-  useAttackUnitAction,
-  useEndTurnAction,
-  useEndUnitPhaseAction,
-  useMoveUnitAction,
-} from "../data/atomActionHooks/BattleAtomHooks";
+import { useAttackUnitAction } from "../data/actions/useAttackUnitAction";
+import { useEndTurnAction } from "../data/actions/useEndTurnAction";
+import { useEndUnitPhaseAction } from "../data/actions/useEndUnitPhaseAction";
+import { useMoveUnitAction } from "../data/actions/useMoveUnitAction";
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { BattleMapActionRecord } from "../data/records/BattleMapActionRecord";
 import { BattleLocationInfoSelector } from "../data/selectors/BattleLocationInfoSelector";
@@ -17,7 +15,9 @@ import { LocationType } from "../data/type/LocationType";
 import { TileStates } from "../data/type/TileStates";
 import { getPhaseDescription } from "../utils/getPhaseDescription";
 import { isUnitPhase } from "../utils/isUnitPhase";
-import { useAutoEndTurnEffect, useMapActionEffect } from "./BattleHooks";
+import { useResetState } from "../utils/useResetState";
+import { useAutoEndTurnEffect } from "./hooks/useAutoEndTurnEffect";
+import { useMapActionEffect } from "./hooks/useMapActionEffect";
 
 function Battle() {
   const { map, currentTurn, maxTurn, phase, weather } = useRecoilValue(
@@ -25,17 +25,23 @@ function Battle() {
   );
   const battleLocationInfo = useRecoilValue(BattleLocationInfoSelector);
   const unitSideInfo = useRecoilValue(UnitSideSelector);
+
   const moveUnitAction = useMoveUnitAction();
   const attackUnitAction = useAttackUnitAction();
   const endUnitPhaseAction = useEndUnitPhaseAction();
   const endTurnAction = useEndTurnAction();
-  const [
-    { actionMode, actionTargetLocation, actionTargetInitialLocation },
-    mapState,
-    setMapAction,
-    resetMapAction,
-  ] = useMapActionEffect();
-  useAutoEndTurnEffect();
+
+  const [mapAction, setMapAction, resetMapAction] = useResetState(
+    BattleMapActionRecord()
+  );
+  const {
+    actionMode,
+    actionTargetLocation,
+    actionTargetInitialLocation,
+  } = mapAction;
+
+  const mapState = useMapActionEffect(mapAction);
+  useAutoEndTurnEffect(mapAction);
 
   const onEmptyModeClick = React.useCallback(
     ([x, y]: LocationType) => {
