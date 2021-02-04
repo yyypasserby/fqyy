@@ -41,7 +41,7 @@ function Battle() {
   } = mapAction;
 
   const mapState = useMapActionEffect(mapAction);
-  useAutoEndTurnEffect(mapAction);
+  const endTurnDialog = useAutoEndTurnEffect(mapAction);
 
   const onEmptyModeClick = React.useCallback(
     ([x, y]: LocationType) => {
@@ -246,6 +246,7 @@ function Battle() {
           </div>
         ))}
       </div>
+      {endTurnDialog}
     </div>
   );
 }
