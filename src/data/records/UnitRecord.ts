@@ -1,4 +1,5 @@
 import { Record, RecordOf } from "immutable";
+import { UnitStates, UnitStateType } from "../type/UnitStates";
 import { CharacterRecord, CharacterRecordType } from "./CharacterRecord";
 
 export type UnitType = {
@@ -12,6 +13,7 @@ export type UnitType = {
   locX: number; // Width
   locY: number; // Height
   currentTurn: number; // The turn that the unit has finished its action
+  state: UnitStateType;
 };
 
 export type UnitRecordType = RecordOf<UnitType>;
@@ -27,4 +29,5 @@ export const UnitRecord = Record<UnitType>({
   locY: 0,
   move: 4,
   currentTurn: 0,
+  state: UnitStates.HEALTHY,
 });

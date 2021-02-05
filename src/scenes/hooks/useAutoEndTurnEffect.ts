@@ -26,7 +26,6 @@ export function useAutoEndTurnEffect(
     }
     let units = phase === Phases.OUR_PHASE ? ourUnits : enemyUnits;
     if (units.find((unit) => unit.currentTurn < currentTurn) == null) {
-      // eslint-disable-next-line no-restricted-globals
       showDialog();
     }
   }, [

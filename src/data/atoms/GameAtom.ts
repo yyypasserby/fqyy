@@ -15,6 +15,7 @@ export const GameAtom = atom({
       CharacterRecord({
         name: "warrior",
         level: 1,
+        strength: 100,
       }),
       // CharacterRecord({
       //   name: "theif",

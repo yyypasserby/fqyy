@@ -7,6 +7,7 @@ import { UnitSideSelector } from "../data/selectors/UnitSideSelector";
 import { Tile } from "../data/type/Tile";
 import { TileStates, TileStateType } from "../data/type/TileStates";
 import { UnitSides } from "../data/type/UnitSides";
+import { UnitStates } from "../data/type/UnitStates";
 
 type Props = {
   locX: number;
@@ -46,9 +47,10 @@ function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
           <div>MP: {unit.mp}</div>
           <div>Attack: {unit.attack}</div>
           <div>Defense: {unit.defense}</div>
+          <div>State: {unit.state}</div>
         </span>
       )}
-      {unit && (
+      {unit && unit.state !== UnitStates.DEAD && (
         <span
           className={css([
             styles.circle,

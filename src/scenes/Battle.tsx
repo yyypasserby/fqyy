@@ -18,6 +18,7 @@ import { isUnitPhase } from "../utils/isUnitPhase";
 import { useResetState } from "../utils/useResetState";
 import { useAutoEndTurnEffect } from "./hooks/useAutoEndTurnEffect";
 import { useMapActionEffect } from "./hooks/useMapActionEffect";
+import { useSetDeadStateEffect } from "./hooks/useSetDeadStateEffect";
 
 function Battle() {
   const { map, currentTurn, maxTurn, phase, weather } = useRecoilValue(
@@ -42,6 +43,7 @@ function Battle() {
 
   const mapState = useMapActionEffect(mapAction);
   const endTurnDialog = useAutoEndTurnEffect(mapAction);
+  useSetDeadStateEffect(mapAction);
 
   const onEmptyModeClick = React.useCallback(
     ([x, y]: LocationType) => {
