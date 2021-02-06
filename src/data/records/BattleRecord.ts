@@ -1,4 +1,5 @@
 import { List, Record, RecordOf } from "immutable";
+
 import { BattleMap } from "../type/BattleMap";
 import { Phases, PhaseType } from "../type/Phases";
 import { Weathers, WeatherType } from "../type/Weathers";
@@ -22,11 +23,11 @@ export type BattleType = BattleUnitsType & {
 export type BattleRecordType = RecordOf<BattleType>;
 
 export const BattleRecord = Record<BattleType>({
-  weather: Weathers.SUNNY,
-  map: BattleMap.random(100, 100),
-  ourUnits: List<UnitRecordType>(),
-  enemyUnits: List<UnitRecordType>(),
   currentTurn: 1,
+  enemyUnits: List<UnitRecordType>(),
+  map: BattleMap.random(100, 100),
   maxTurn: 20,
+  ourUnits: List<UnitRecordType>(),
   phase: Phases.OUR_PHASE,
+  weather: Weathers.SUNNY,
 });

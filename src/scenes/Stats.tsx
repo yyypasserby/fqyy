@@ -1,5 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
+
 import { useAddPotentialAction } from "../data/actions/useAddPotentialAction";
 import { CharacterListSelector } from "../data/selectors/CharacterListSelector";
 

@@ -1,8 +1,8 @@
 export const TileTypes = {
   GRASS: "GRASS",
   JUNGLE: "JUNGLE",
-  POND: "POND",
   MOUNTAIN: "MOUNTAIN",
+  POND: "POND",
 } as const;
 
 export type TileTypeType = keyof typeof TileTypes;

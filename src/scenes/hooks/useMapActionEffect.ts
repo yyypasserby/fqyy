@@ -1,5 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
+
 import { BattleAtom } from "../../data/atoms/BattleAtom";
 import { BattleMapActionRecordType } from "../../data/records/BattleMapActionRecord";
 import { BattleLocationInfoSelector } from "../../data/selectors/BattleLocationInfoSelector";

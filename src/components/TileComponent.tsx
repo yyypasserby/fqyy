@@ -1,6 +1,7 @@
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import { useRecoilValue } from "recoil";
+
 import { BattleAtom } from "../data/atoms/BattleAtom";
 import { UnitRecordType } from "../data/records/UnitRecord";
 import { UnitSideSelector } from "../data/selectors/UnitSideSelector";
@@ -71,37 +72,11 @@ function TileComponent({ locX, locY, onClick, tile, tileState, unit }: Props) {
 export default TileComponent;
 
 const styles = StyleSheet.create({
-  unitInfo: {
-    position: "absolute",
-    left: 100,
-    bottom: 50,
-    height: 100,
-    width: 120,
-    color: "white",
-    backgroundColor: "black",
-    zIndex: 1,
-    borderRadius: 6,
-  },
-  tile: {
-    height: 100,
-    width: 100,
-    display: "inline-block",
-    position: "relative",
-  },
-  tileHover: {
-    boxShadow: "0 0 0 4px snow inset",
-  },
   circle: {
-    width: 100,
-    height: 100,
     borderRadius: "50%",
     display: "inline-block",
-  },
-  ourUnit: {
-    background: "yellow",
-  },
-  ourUnitFinish: {
-    background: "gold",
+    height: 100,
+    width: 100,
   },
   enemyUnit: {
     background: "blue",
@@ -109,10 +84,36 @@ const styles = StyleSheet.create({
   enemyUnitFinish: {
     background: "navy",
   },
-  tileShowMove: {
-    backgroundColor: "mediumblue",
+  ourUnit: {
+    background: "yellow",
+  },
+  ourUnitFinish: {
+    background: "gold",
+  },
+  tile: {
+    display: "inline-block",
+    height: 100,
+    position: "relative",
+    width: 100,
+  },
+  tileHover: {
+    boxShadow: "0 0 0 4px snow inset",
   },
   tileShowAttack: {
     backgroundColor: "red",
+  },
+  tileShowMove: {
+    backgroundColor: "mediumblue",
+  },
+  unitInfo: {
+    backgroundColor: "black",
+    borderRadius: 6,
+    bottom: 50,
+    color: "white",
+    height: 100,
+    left: 100,
+    position: "absolute",
+    width: 120,
+    zIndex: 1,
   },
 });

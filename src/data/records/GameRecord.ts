@@ -1,4 +1,5 @@
-import { RecordOf, Record, List } from "immutable";
+import { List, Record, RecordOf } from "immutable";
+
 import { CharacterRecordType } from "./CharacterRecord";
 
 export type GameType = {
@@ -11,8 +12,8 @@ export type GameType = {
 export type GameRecordType = RecordOf<GameType>;
 
 export const GameRecord = Record<GameType>({
+  characterList: List<CharacterRecordType>([]),
   id: 0,
   name: "",
-  characterList: List<CharacterRecordType>([]),
   pathHistoryList: List<number>([]),
 });

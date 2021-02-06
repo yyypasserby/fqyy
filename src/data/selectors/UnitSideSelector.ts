@@ -1,11 +1,11 @@
 import { selector } from "recoil";
+
 import { BattleAtom } from "../atoms/BattleAtom";
 import { UnitSides, UnitSideType } from "../type/UnitSides";
 
 export const UnitSideSelector = selector<
   (unitName: string) => UnitSideType | null
 >({
-  key: "UnitSideSelector",
   get: ({ get }) => {
     const { ourUnits, enemyUnits } = get(BattleAtom);
     return (unitName: string) => {
@@ -17,4 +17,5 @@ export const UnitSideSelector = selector<
       return null;
     };
   },
+  key: "UnitSideSelector",
 });

@@ -1,6 +1,7 @@
 import { css, StyleSheet } from "aphrodite";
 import React from "react";
 import { useRecoilValue } from "recoil";
+
 import TileComponent from "../components/TileComponent";
 import { useAttackUnitAction } from "../data/actions/useAttackUnitAction";
 import { useEndTurnAction } from "../data/actions/useEndTurnAction";
@@ -52,8 +53,8 @@ function Battle() {
         setMapAction(
           BattleMapActionRecord({
             actionMode: ActionModes.IN_MOVE,
-            actionTargetLocation: [x, y],
             actionTargetInitialLocation: [x, y],
+            actionTargetLocation: [x, y],
           })
         );
       }
@@ -93,9 +94,9 @@ function Battle() {
           setMapAction((prevRecord) =>
             BattleMapActionRecord({
               actionMode: ActionModes.IN_ACTION,
-              actionTargetLocation: [x, y],
               actionTargetInitialLocation:
                 prevRecord.actionTargetInitialLocation,
+              actionTargetLocation: [x, y],
             })
           );
         } else {
@@ -256,10 +257,10 @@ function Battle() {
 export default Battle;
 
 const styles = StyleSheet.create({
-  unitActionSection: {
-    float: "right",
-  },
   row: {
     height: 100,
+  },
+  unitActionSection: {
+    float: "right",
   },
 });

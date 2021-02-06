@@ -52,9 +52,9 @@ export function useDialog({
 
 const styles = StyleSheet.create({
   dialogModal: {
+    alignItems: "center",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
   },
 });

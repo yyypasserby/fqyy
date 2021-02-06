@@ -1,11 +1,12 @@
-import { StyleSheet, css } from "aphrodite";
-import Home from "./scenes/Home";
-import Stats from "./scenes/Stats";
-import Battle from "./scenes/Battle";
-import Paths from "./scenes/Paths";
+import { css, StyleSheet } from "aphrodite";
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import { RecoilRoot } from "recoil";
+
+import Battle from "./scenes/Battle";
+import Home from "./scenes/Home";
+import Paths from "./scenes/Paths";
+import Stats from "./scenes/Stats";
 
 function App() {
   return (

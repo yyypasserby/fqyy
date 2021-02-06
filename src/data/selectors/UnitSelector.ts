@@ -1,9 +1,9 @@
 import { selectorFamily } from "recoil";
+
 import { BattleAtom } from "../atoms/BattleAtom";
 import { UnitRecordType } from "../records/UnitRecord";
 
 export const UnitSelector = selectorFamily<UnitRecordType | undefined, string>({
-  key: "UnitSelector",
   get: (unitName) => ({ get }) => {
     const { ourUnits, enemyUnits } = get(BattleAtom);
     return (
@@ -11,4 +11,5 @@ export const UnitSelector = selectorFamily<UnitRecordType | undefined, string>({
       enemyUnits.find((unit) => unit.name === unitName)
     );
   },
+  key: "UnitSelector",
 });

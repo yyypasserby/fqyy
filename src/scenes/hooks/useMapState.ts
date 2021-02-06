@@ -1,6 +1,7 @@
 import { List } from "immutable";
 import React from "react";
 import { useRecoilValue } from "recoil";
+
 import { BattleAtom } from "../../data/atoms/BattleAtom";
 import { LocationType } from "../../data/type/LocationType";
 import {

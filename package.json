@@ -44,7 +44,16 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "plugins": [
+      "simple-import-sort",
+      "sort-keys-fix"
+    ],
+    "rules": {
+      "sort-keys-fix/sort-keys-fix": "warn",
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn"
+    }
   },
   "browserslist": {
     "production": [
@@ -60,6 +69,8 @@
   },
   "devDependencies": {
     "@types/react-modal": "^3.10.6",
-    "@types/react-router-dom": "^5.1.7"
+    "@types/react-router-dom": "^5.1.7",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-sort-keys-fix": "^1.1.1"
   }
 }

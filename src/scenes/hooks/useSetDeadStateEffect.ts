@@ -1,5 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
+
 import { useSetDeadStateAction } from "../../data/actions/useSetDeadStateAction";
 import { BattleMapActionRecordType } from "../../data/records/BattleMapActionRecord";
 import { UnitListSelector } from "../../data/selectors/UnitListSelector";

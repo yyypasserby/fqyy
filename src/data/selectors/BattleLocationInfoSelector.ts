@@ -1,10 +1,10 @@
 import { selector } from "recoil";
+
 import { BattleAtom } from "../atoms/BattleAtom";
 import { UnitRecordType } from "../records/UnitRecord";
 import { LocationType } from "../type/LocationType";
 
 export const BattleLocationInfoSelector = selector({
-  key: "BattleLocationInfoSelector",
   get: ({ get }) => {
     const battleRecord = get(BattleAtom);
     const battleLocationInfo = new Map<number, UnitRecordType>();
@@ -25,4 +25,5 @@ export const BattleLocationInfoSelector = selector({
       return battleLocationInfo.get(getLocIndex(x, y));
     };
   },
+  key: "BattleLocationInfoSelector",
 });

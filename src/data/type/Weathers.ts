@@ -1,8 +1,8 @@
 export const Weathers = {
-  SUNNY: "SUNNY",
   RAINY: "RAINY",
-  WINDY: "WINDY",
   SNOWY: "SNOWY",
+  SUNNY: "SUNNY",
+  WINDY: "WINDY",
 } as const;
 
 export type WeatherType = keyof typeof Weathers;

@@ -1,5 +1,6 @@
 import { List } from "immutable";
 import { atom } from "recoil";
+
 import {
   CharacterRecord,
   CharacterRecordType,
@@ -7,14 +8,11 @@ import {
 import { GameRecord } from "../records/GameRecord";
 
 export const GameAtom = atom({
-  key: "GameAtom",
   default: GameRecord({
-    id: 0,
-    name: "new game",
     characterList: List<CharacterRecordType>([
       CharacterRecord({
-        name: "warrior",
         level: 1,
+        name: "warrior",
         strength: 100,
       }),
       // CharacterRecord({
@@ -26,6 +24,9 @@ export const GameAtom = atom({
       //   level: 1,
       // }),
     ]),
+    id: 0,
+    name: "new game",
     pathHistoryList: List<number>([]),
   }),
+  key: "GameAtom",
 });

@@ -2,7 +2,14 @@
 
 ## TODO
 
-1. Refactor our list and enemy list into 1
+1. Refactor our list and enemy list into one
+1. Add potential system
+1. Add rogue-like element
+1. Add skills
+1. Add equipment
+1. Add random path system
+1. Add map generator
+1. Add enemy AI
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

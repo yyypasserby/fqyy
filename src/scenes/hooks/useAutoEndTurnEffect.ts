@@ -1,5 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
+
 import { useEndTurnAction } from "../../data/actions/useEndTurnAction";
 import { BattleAtom } from "../../data/atoms/BattleAtom";
 import { BattleMapActionRecordType } from "../../data/records/BattleMapActionRecord";
@@ -16,8 +17,8 @@ export function useAutoEndTurnEffect(
   const [showDialog, dialog] = useDialog({
     headline: "Do you want to end turn?",
     primaryAction: "Yes",
-    secondaryAction: "No",
     primaryActionCallback: endTurnAction,
+    secondaryAction: "No",
   });
 
   React.useEffect(() => {

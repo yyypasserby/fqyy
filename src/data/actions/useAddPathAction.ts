@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useSetRecoilState } from "recoil";
+
 import { GameAtom } from "../atoms/GameAtom";
 
 export function useAddPathAction(): (item: number) => void {

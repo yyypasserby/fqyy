@@ -18,11 +18,11 @@ export type CharacterType = AbilityType & {
 export type CharacterRecordType = RecordOf<CharacterType>;
 
 export const CharacterRecord = Record<CharacterType>({
-  name: "character",
-  level: 1,
-  potential: 10,
-  strength: 1,
   agility: 1,
   intelligence: 1,
+  level: 1,
   move: 10,
+  name: "character",
+  potential: 10,
+  strength: 1,
 });
