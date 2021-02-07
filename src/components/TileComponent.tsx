@@ -13,9 +13,9 @@ import { UnitStates } from "../data/type/UnitStates";
 type Props = {
   locX: number;
   locY: number;
+  onClick: () => void;
   tile: Tile;
   tileState: TileStateType | undefined;
-  onClick: () => void;
   unit: UnitRecordType | undefined;
 };
 

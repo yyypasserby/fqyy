@@ -4,16 +4,18 @@ import { UnitStates, UnitStateType } from "../type/UnitStates";
 import { CharacterRecord, CharacterRecordType } from "./CharacterRecord";
 
 export type UnitType = {
-  name: string;
-  character: CharacterRecordType;
-  hp: number;
-  mp: number;
   attack: number;
+  character: CharacterRecordType;
+  // Height
+  currentTurn: number;
   defense: number;
+  hp: number;
+  locX: number;
+  // Width
+  locY: number;
   move: number;
-  locX: number; // Width
-  locY: number; // Height
-  currentTurn: number; // The turn that the unit has finished its action
+  mp: number;
+  name: string; // The turn that the unit has finished its action
   state: UnitStateType;
 };
 

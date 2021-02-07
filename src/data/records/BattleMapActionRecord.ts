@@ -5,8 +5,8 @@ import { LocationType } from "../type/LocationType";
 
 export type BattleMapActionType = {
   actionMode: ActionModeType;
-  actionTargetLocation: LocationType | null;
   actionTargetInitialLocation: LocationType | null;
+  actionTargetLocation: LocationType | null;
 };
 
 export type BattleMapActionRecordType = RecordOf<BattleMapActionType>;

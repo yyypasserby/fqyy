@@ -1,18 +1,18 @@
 import { Record, RecordOf } from "immutable";
 
 export type AbilityType = {
-  strength: number;
   agility: number;
   intelligence: number;
+  strength: number;
 };
 
 export type AbilityTypeKey = keyof AbilityType;
 
 export type CharacterType = AbilityType & {
-  name: string;
   level: number;
-  potential: number;
   move: number;
+  name: string;
+  potential: number;
 };
 
 export type CharacterRecordType = RecordOf<CharacterType>;

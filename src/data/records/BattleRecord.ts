@@ -6,18 +6,18 @@ import { Weathers, WeatherType } from "../type/Weathers";
 import { UnitRecordType } from "./UnitRecord";
 
 export type BattleUnitsType = {
-  ourUnits: List<UnitRecordType>;
   enemyUnits: List<UnitRecordType>;
+  ourUnits: List<UnitRecordType>;
 };
 
 export type BattleUnitsKeyType = keyof BattleUnitsType;
 
 export type BattleType = BattleUnitsType & {
-  weather: WeatherType;
-  map: BattleMap;
   currentTurn: number;
+  map: BattleMap;
   maxTurn: number;
   phase: PhaseType;
+  weather: WeatherType;
 };
 
 export type BattleRecordType = RecordOf<BattleType>;

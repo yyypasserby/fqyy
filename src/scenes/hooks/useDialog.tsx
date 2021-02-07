@@ -5,8 +5,8 @@ import ReactModal from "react-modal";
 type DialogControlType = {
   headline?: string;
   primaryAction?: string;
-  secondaryAction?: string;
   primaryActionCallback?: () => void;
+  secondaryAction?: string;
   secondaryActionCallback?: () => void;
 };
 

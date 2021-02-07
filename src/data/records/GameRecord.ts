@@ -3,9 +3,9 @@ import { List, Record, RecordOf } from "immutable";
 import { CharacterRecordType } from "./CharacterRecord";
 
 export type GameType = {
+  characterList: List<CharacterRecordType>;
   id: number;
   name: string;
-  characterList: List<CharacterRecordType>;
   pathHistoryList: List<number>;
 };
 

@@ -41,18 +41,22 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
     "extends": [
       "react-app",
       "react-app/jest"
     ],
     "plugins": [
       "simple-import-sort",
-      "sort-keys-fix"
+      "sort-keys-fix",
+      "typescript-sort-keys"
     ],
     "rules": {
       "sort-keys-fix/sort-keys-fix": "warn",
       "simple-import-sort/imports": "warn",
-      "simple-import-sort/exports": "warn"
+      "simple-import-sort/exports": "warn",
+      "typescript-sort-keys/interface": "warn",
+      "typescript-sort-keys/string-enum": "warn"
     }
   },
   "browserslist": {
@@ -71,6 +75,7 @@
     "@types/react-modal": "^3.10.6",
     "@types/react-router-dom": "^5.1.7",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "eslint-plugin-sort-keys-fix": "^1.1.1"
+    "eslint-plugin-sort-keys-fix": "^1.1.1",
+    "eslint-plugin-typescript-sort-keys": "^1.5.0"
   }
 }
